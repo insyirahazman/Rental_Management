@@ -259,9 +259,9 @@ QueueItemType Queue::getFront()
 
 void PaymentMenu(TenantManager& manager)
 {
-    system("cls");
     int option;
     do{
+        system("cls");
         cout << "===========================\n";
         cout << "Payment History and overdue\n";
         cout << "===========================\n";
@@ -299,17 +299,18 @@ void PaymentMenu(TenantManager& manager)
 
             default:
                 cout << "Invalid option. Please enter a number between 0-4." << endl;
-                promptContinue();
-        }
+
+        } promptContinue();
+
     } while(true);
 }
 
 void TenantPaymentMenu()
 {
-    system("cls");
     int paymentoption;
 
     do{
+        system("cls");
         cout << "============================\n";
         cout << "Payment History and Overdue\n";
         cout << "============================\n";
@@ -319,7 +320,7 @@ void TenantPaymentMenu()
 
         cout << "Enter an option (0-2): ";
         cin >> paymentoption;
-        cin.ignore();
+
         switch (paymentoption)
         {
             case 0:
@@ -335,8 +336,7 @@ void TenantPaymentMenu()
 
             default:
                 cout << "Invalid option. Please enter a number between 0-2." << endl;
-                promptContinue();
-        }
+        } promptContinue();
     } while (paymentoption != 0);
 }
 
@@ -632,26 +632,23 @@ void menu()
 
 void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositManager, Property& propertyManager)
 {
-    system("cls");
     int landlordChoice;
-    char Continue;
 
-    cout << "=====" << endl;
-    cout << "OWNER" << endl;
-    cout << "=====" << endl;
-    cout << "\n-----------------------------------------" << endl;
-    cout << "No.  Option" << endl;
-    cout << "-----------------------------------------" << endl;
-    cout << "1    Owner Details" << endl;
-    cout << "2    Tenant Details" << endl;
-    cout << "3    Payment History and Overdue" << endl;
-    cout << "4    House Availability" << endl;
-    cout << "5    Deposit" << endl;
-    cout << "" << endl;
-    cout << "0    Go back to Main Menu" << endl;
-
-    do
-    {
+    do{
+        system("cls");
+        cout << "=====" << endl;
+        cout << "OWNER" << endl;
+        cout << "=====" << endl;
+        cout << "\n-----------------------------------------" << endl;
+        cout << "No.  Option" << endl;
+        cout << "-----------------------------------------" << endl;
+        cout << "1    Owner Details" << endl;
+        cout << "2    Tenant Details" << endl;
+        cout << "3    Payment History and Overdue" << endl;
+        cout << "4    House Availability" << endl;
+        cout << "5    Deposit" << endl;
+        cout << "" << endl;
+        cout << "0    Go back to Main Menu" << endl;
         cout << "Enter your choice (0-5): ";
         cin >> landlordChoice;
 
@@ -693,7 +690,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                     system("cls");
 
                     if(OwnerChoice == 0)
-                        break;
+                        return;
 
                     switch (OwnerChoice)
                     {
@@ -1017,7 +1014,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
 
         } promptContinue();
 
-    } while (landlordChoice != 0);
+    } while (true);
 
     cout << "_______________________________________________________" << endl;
 }
@@ -1026,22 +1023,19 @@ void tenant(TenantManager& manager, DepositManager& depositManager, Property& pr
 {
     int tenantChoice;
     int tenantID;
-    char Continue;
 
-    system("cls");
-    cout << "======" << endl;
-    cout << "TENANT" << endl;
-    cout << "======" << endl;
-    cout << "\n-----------------------------------------" << endl;
-    cout << "1    Tenant Details" << endl;
-    cout << "2    Payment History and Overdue" <<endl;
-    cout << "3    Deposit Return" << endl;
-    cout << "4    House Availability" << endl;
-    cout << "" << endl;
-    cout << "0    Go back to Main Menu" << endl;
-
-    do
-    {
+    do{
+        system("cls");
+        cout << "======" << endl;
+        cout << "TENANT" << endl;
+        cout << "======" << endl;
+        cout << "\n-----------------------------------------" << endl;
+        cout << "1    Tenant Details" << endl;
+        cout << "2    Payment History and Overdue" <<endl;
+        cout << "3    Deposit Return" << endl;
+        cout << "4    House Availability" << endl;
+        cout << "" << endl;
+        cout << "0    Go back to Main Menu" << endl;
         cout << "Enter your choice (0-4): ";
         cin >> tenantChoice;
         cin.ignore();
@@ -1135,7 +1129,7 @@ void tenant(TenantManager& manager, DepositManager& depositManager, Property& pr
 
     } promptContinue();
 
-  }while (tenantChoice != 0);
+  }while (true);
 
   cout<<"_______________________________________________________"<<endl;
 }
@@ -1166,7 +1160,7 @@ int main(){
             break;
         case 3:
             cout<<"~Thank you for using our system~\n";
-            cout<<"         See you again!!"<<endl;
+            cout<<"        See you again!!"<<endl;
             break;
         default:
             cout<<"Invalid choice."<<endl;
