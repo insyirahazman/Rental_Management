@@ -20,8 +20,8 @@ List::~List() {
         PropertyPtr prop = temp->propertyHead;
         while (prop != nullptr) {
             PropertyPtr tempProp = prop;
-            prop = prop->ptr->next;  // Access raw pointer and navigate to `next`
-            delete tempProp.ptr;     // Delete the raw pointer
+            prop = prop->next;  // Access raw pointer and navigate to `next`
+            delete tempProp;     // Delete the raw pointer
         }
 
         delete[] temp->OwnerName;

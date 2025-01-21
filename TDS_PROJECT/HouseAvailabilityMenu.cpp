@@ -24,7 +24,7 @@ void HouseAvailabilityMenu::addNewProperty() {
     cout << "Enter occupancy status (empty/occupied): ";
     cin >> status;
 
-    int id = propertyManager.AddProperty(-1, address, details, deposit, rent, status);
+    int id = propertyManager.AddProperty(ownerList, -1, -1, address, details, deposit, rent, status);
     if (id != -1) {
         cout << "Property added successfully! Property ID: " << id << endl;
     } else {
@@ -89,7 +89,7 @@ void HouseAvailabilityMenu::checkStatus() {
 }
 
 void HouseAvailabilityMenu::viewVacantProperties() {
-    int vacantUnits[TABLE_SIZE];
+    int vacantUnits[HASH_SIZE];
     int count;
     propertyManager.VacantUnits(vacantUnits, count);
 

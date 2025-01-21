@@ -12,7 +12,7 @@ class Property;
 class List{
 private:
     struct PropertyDetails{
-        PropertyDetails* PropertyPtr;
+        PropertyDetails* next;
     };
 
     struct PropertyPtr{
@@ -33,12 +33,13 @@ private:
         char* OwnerContact;
         char* OwnerEmail;
         Owner* next;
-        PropertyPtr propertyHead;
+        PropertyDetails* propertyHead;
 
         Owner() : OwnerID(0), OwnerName(nullptr), OwnerContact(nullptr), OwnerEmail(nullptr), propertyHead(nullptr), next(nullptr) {}
     };
 
     typedef struct Owner* OwnerPtr;
+    typedef struct PropertyDetails* PropertyPtr;
     OwnerPtr head;
     OwnerPtr curr;
     OwnerPtr temp;

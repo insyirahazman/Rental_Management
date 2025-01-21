@@ -68,12 +68,12 @@ void AddPayment(Payment payments[], int& size, int maxSize)
     promptContinue();
 }
 
-void DeletePayment(Payment payments[], int& size, const string& UserID)
+void DeletePayment(Payment payments[], int& size, string& UserID)  // Change const string& to string&
 {
     system("cls");
     cout << "\n============== Delete Payment ==============" << endl;
     cout << "Enter Tenant ID to delete records: ";
-    cin >> UserID;
+    cin >> UserID;  // Use non-const string variable
     int index = -1;
     //to find a record by using paymentID
     for (int i = 0; i < size; i++)

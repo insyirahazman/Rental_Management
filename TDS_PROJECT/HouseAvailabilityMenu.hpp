@@ -5,7 +5,8 @@
 
 class HouseAvailabilityMenu {
 private:
-    House::Property propertyManager;
+    Property propertyManager;
+    List ownerList;
 
     // Helper functions for menu operations
     void addNewProperty();
