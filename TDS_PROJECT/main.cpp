@@ -345,7 +345,6 @@ void houseAvailabilityLandlord(List& OwnerList, Property& propertyManager)
 {
     system("cls");
     int houseOwnerchoice;
-    char Continue;
 
     do{
         cout << "==================" << endl;
