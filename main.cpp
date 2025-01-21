@@ -16,6 +16,8 @@ using namespace Overdue1;
 void menu();
 void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositManager, Property& propertyManager);
 void tenant(TenantManager& manager, DepositManager& depositManager, Property& propertyManager);
+void manageOwnerDetails(List& OwnerList, Property& propertyManager);
+void manageTenantDetails(TenantManager& manager);
 void promptContinue();
 
 // Struct to store payment information
@@ -634,395 +636,130 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
 {
     system("cls");
     int landlordChoice;
-    char Continue;
 
-    cout << "=====" << endl;
-    cout << "OWNER" << endl;
-    cout << "=====" << endl;
-    cout << "\n-----------------------------------------" << endl;
-    cout << "No.  Option" << endl;
-    cout << "-----------------------------------------" << endl;
-    cout << "1    Owner Details" << endl;
-    cout << "2    Tenant Details" << endl;
-    cout << "3    Payment History and Overdue" << endl;
-    cout << "4    House Availability" << endl;
-    cout << "5    Deposit" << endl;
-    cout << "" << endl;
-    cout << "0    Go back to Main Menu" << endl;
-
-    do
-    {
+    do {
+        system("cls");
+        cout << "=====" << endl;
+        cout << "OWNER" << endl;
+        cout << "=====" << endl;
+        cout << "\n-----------------------------------------" << endl;
+        cout << "No.  Option" << endl;
+        cout << "-----------------------------------------" << endl;
+        cout << "1    Owner Details" << endl;
+        cout << "2    Tenant Details" << endl;
+        cout << "3    Payment History and Overdue" << endl;
+        cout << "4    House Availability" << endl;
+        cout << "5    Deposit" << endl;
+        cout << "" << endl;
+        cout << "0    Go back to Main Menu" << endl;
         cout << "Enter your choice (0-5): ";
         cin >> landlordChoice;
 
-        if (landlordChoice == 0)
-            return;
-
-        if (landlordChoice < 0 || landlordChoice > 5)
-        {
+        switch (landlordChoice) {
+        case 0:
+            return; // Exit to main menu
+        case 1:
+            manageOwnerDetails(OwnerList, propertyManager);
+            break;
+        case 2:
+            manageTenantDetails(manager);
+            break;
+        case 3:
+            PaymentMenu(manager);
+            break;
+        case 4:
+            houseAvailabilityLandlord(propertyManager);
+            break;
+        case 5:
+            DepositManager(depositManager);
+            break;
+        default:
             cout << "Invalid choice. Please enter a number between 0-5." << endl;
-            continue;
+            promptContinue();
         }
-
-        switch (landlordChoice)
-        {
-            case 1:
-            {
-                int OwnerChoice;
-                char Continue;
-
-                do
-                {
-                    system("cls");
-                    cout << "=========================================" << endl;
-                    cout << "               OWNER DETAILS             " << endl;
-                    cout << "=========================================" << endl;
-                    cout << "\n-----------------------------------------" << endl;
-                    cout << "No.  Option" << endl;
-                    cout << "-----------------------------------------" << endl;
-                    cout << "1    Add Owner" << endl;
-                    cout << "2    Update Owner" << endl;
-                    cout << "3    Remove Owner" <<endl;
-                    cout << "4    Display All Owners" << endl;
-                    cout << "5    Add Property To Owner" << endl;
-                    cout << "" << endl;
-                    cout << "0    Go back to Main Menu" << endl;
-
-                    cout << "Enter your choice (0-5): ";
-                    cin >> OwnerChoice;
-                    system("cls");
-
-                    if(OwnerChoice == 0)
-                        break;
-
-                    switch (OwnerChoice)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                        {
-                            cout << "\n============== Add Owner ==============" << endl;
-                            int id = 1;
-                            char name[100], contact[15], email[100];
-                            cin.ignore();
-                            cout << "Enter Owner Name     : ";
-                            cin.getline(name, 100);
-                            cout << "Enter Owner Contact  : ";
-                            cin.getline(contact, 15);
-                            cout << "Enter Owner Email    : ";
-                            cin.getline(email, 100);
-
-                            OwnerList.AddOwner(name, contact, email);
-                            cout << "Owner added successfully!" << endl;
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            break;
-                        }
-
-                        case 2:
-                        {
-                            cout << "\n============== Update Owner ==============" << endl;
-                            int id;
-                            char name[100], contact[15], email[100];
-                            cout << "Enter Owner ID to update      : ";
-                            cin >> id;
-                            cout << "Enter New Owner Name          : ";
-                            cin.ignore();
-                            cin.getline(name, 100);
-                            cout << "Enter New Owner Contact       : ";
-                            cin.getline(contact, 15);
-                            cout << "Enter New Owner Email         : ";
-                            cin.getline(email, 100);
-
-                            OwnerList.UpdateOwner(id, name, contact, email);
-                            cout << "Owner updated successfully!" << endl;
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            break;
-                        }
-
-                        case 3:
-                        {
-                            cout << "\n============== Remove Owner ==============" << endl;
-                            int id;
-                            cout << "Enter Owner ID to remove: ";
-                            cin >> id;
-                            OwnerList.RemoveOwner(id);
-                            cout << "Owner removed successfully!" << endl;
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            break;
-                        }
-
-                        case 4:
-                        {
-                            cout << "\n============== Owner List ==============" << endl;
-                            OwnerList.GetOwnerDetails();
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            break;
-                        }
-
-                        case 5:
-                        {
-                            cout << "\n============== Add Property To Owner ==============" << endl;
-                            int ownerId;
-                            cout << "Enter Owner ID: ";
-                            cin >> ownerId;
-
-                            if (!OwnerList.IsOwnerExist(ownerId))
-                            {
-                                cout << "Owner ID not found!" << endl;
-                                cout << "Press Enter to continue...";
-                                cin.ignore();
-                                cin.get();
-                                break;
-                            }
-
-                            string address, details, status;
-                            float deposit, rent;
-
-                            cout << "Enter property address: ";
-                            cin.ignore();
-                            getline(cin, address);
-
-                            cout << "Enter unit details (e.g., 2bed 2bath): ";
-                            getline(cin, details);
-
-                            cout << "Enter rent deposit amount: ";
-                            cin >> deposit;
-
-                            cout << "Enter monthly rent amount: ";
-                            cin >> rent;
-
-                            cout << "Enter occupancy status (empty/occupied): ";
-                            cin >> status;
-
-                            int id = propertyManager.AddProperty(id, address, details, deposit, rent, status);
-                            if (id != -1)
-                            {
-                                cout << "Property added successfully! Property ID: " << id << endl;
-                            }
-                            else
-                            {
-                                cout << "Failed to add property. Storage might be full." << endl;
-                            }
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            break;
-                        }
-
-                        default:
-                            cout << "Invalid option. Please enter a number between 0-5." << endl;
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            continue;
-                    }
-
-                } while (OwnerChoice != 0);
-            }
-            break;
-
-            case 2:
-            {
-                int tenantChoice;
-                do
-                {
-                    system("cls");
-                    cout << "=========================================" << endl;
-                    cout << "               TENANT DETAILS            " << endl;
-                    cout << "=========================================" << endl;
-                    cout << "1    Add Tenant" << endl;
-                    cout << "2    Update Tenant Information" << endl;
-                    cout << "3    Display Tenant Information" << endl;
-                    cout << "4    Remove Tenant" << endl;
-                    cout << "0    Back to Owner Menu" << endl;
-                    cout << "\nEnter your choice (0-4): ";
-                    cin >> tenantChoice;
-
-                    // Exit tenant details menu
-                    if (tenantChoice == 0)
-                        break;
-
-                    // Input choice less or more than 0-4
-                    if (tenantChoice < 0 || tenantChoice > 4)
-                    {
-                        cout << "Invalid choice. Please enter a number between 0-4." << endl;
-                        cout << "Press Enter to continue...";
-                        cin.ignore();
-                        cin.get();
-                        continue;
-                    }
-
-                    // Switch based on choice
-                    switch (tenantChoice)
-                    {
-                        // Add tenant
-                        case 1:
-                        {
-                            int TenantID;
-                            string TenantName, TenantIC, TenantContact, TenantEmail, AccountNumber, BankName;
-
-                            cout << "Enter Tenant ID: ";
-                            cin >> TenantID;
-
-                            // Check if the tenant ID already exists
-                            while (manager.DoesTenantExist(TenantID))
-                            {
-                                cout << "Error: Tenant with ID " << TenantID << " already exists!" << endl;
-                                cout << "Details will be stored in the next available index." << endl;
-
-                                // Find the next available index
-                                int index = manager.hashFunction(TenantID);
-                                while (manager.IsOccupied(index))
-                                {
-                                    index = (index + 1) % TABLE_SIZE; // Wrap around if necessary
-                                }
-                                cout << "You can add the tenant with ID: " << index << endl;
-                                cout << "Please enter a new Tenant ID: ";
-                                cin >> TenantID; // Update TenantID to the new ID
-                            }
-
-                            cin.ignore();
-                            cout << "Enter Tenant Name: ";
-                            getline(cin, TenantName);
-                            cout << "Enter Tenant IC: ";
-                            getline(cin, TenantIC);
-                            cout << "Enter Tenant Contact: ";
-                            getline(cin, TenantContact);
-                            cout << "Enter Tenant Email: ";
-                            getline(cin, TenantEmail);
-                            cout << "Enter Account Number: ";
-                            getline(cin, AccountNumber);
-                            cout << "Enter Bank Name: ";
-                            getline(cin, BankName);
-
-                            // Now add the tenant with the new ID
-                            manager.AddTenant(TenantID, TenantName, TenantIC, TenantContact, TenantEmail, AccountNumber, BankName);
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                        }
-                        break;
-
-                        // Update tenant details
-                        case 2:
-                        {
-                            int TenantID;
-                            cout << "Enter Tenant ID: ";
-                            cin >> TenantID;
-
-                            if (!manager.DoesTenantExist(TenantID))
-                            {
-                                cout << "Tenant ID not found!" << endl;
-                                cout << "Press Enter to continue...";
-                                cin.ignore();
-                                cin.get();
-                                break;
-                            }
-
-                            // Call the update tenant menu function
-                            updateTenantMenu(manager, TenantID);
-                            break;
-                        }
-
-                        // Display tenant details
-                        case 3:
-                            int tenantID;
-                            cout << "Enter Tenant ID: ";
-                            cin >> tenantID;
-                            system("cls");
-                            cout << manager.GetTenantDetails(tenantID) << endl;
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            break;
-
-                        // Remove tenant
-                        case 4:
-                            cout << "Enter Tenant ID to remove: ";
-                            cin >> tenantID;
-                            manager.RemoveTenant(tenantID);
-                            cout << "Tenant removed successfully!" << endl;
-                            cout << "Press Enter to continue...";
-                            cin.ignore();
-                            cin.get();
-                            break;
-                    }
-                } while (true);
-            }
-            break;
-
-            case 3:
-                PaymentMenu(manager);
-                break;
-            case 4:
-                houseAvailabilityLandlord(propertyManager);
-                break;
-            case 5:
-            {
-                int depositChoice;
-                do
-                {
-                    system("cls");
-                    cout << "========== Deposit Management ==========" << endl;
-                    cout << "1. Add New Deposit" << endl;
-                    cout << "2. View All Deposits" << endl;
-                    cout << "3. Update Deposit" << endl;
-                    cout << "0. Back to Owner Menu" << endl;
-
-                    cout << "Enter choice (0-3): ";
-                    cin >> depositChoice;
-
-                    switch (depositChoice)
-                    {
-                        case 1:
-                            depositManager.AddDeposit();
-                            break;
-
-                        case 2:
-                            depositManager.ViewDeposits();
-                            break;
-
-                        case 3:
-                        {
-                            int tenantID;
-                            cout << "Enter Tenant ID to update deposit: ";
-                            cin >> tenantID;
-                            depositManager.UpdateDeposit(tenantID);
-                            break;
-                        }
-
-                        case 0:
-                            break;
-
-                        default:
-                            cout << "Invalid option." << endl;
-                    }
-                    if (depositChoice != 0)
-                    {
-                        cout << "Press Enter to continue...";
-                        cin.ignore();
-                        cin.get();
-                    }
-                } while (depositChoice != 0);
-                break;
-            }
-
-            default:
-                cout << "Invalid option. Please enter a number between 0-5." << endl;
-
-        } promptContinue();
-
     } while (landlordChoice != 0);
+}
 
-    cout << "_______________________________________________________" << endl;
+void manageOwnerDetails(List& OwnerList, Property& propertyManager)
+{
+    int ownerChoice;
+
+    do {
+        system("cls");
+        cout << "=========================================" << endl;
+        cout << "               OWNER DETAILS             " << endl;
+        cout << "=========================================" << endl;
+        cout << "1    Add Owner" << endl;
+        cout << "2    Update Owner" << endl;
+        cout << "3    Remove Owner" << endl;
+        cout << "4    Display All Owners" << endl;
+        cout << "5    Add Property To Owner" << endl;
+        cout << "0    Back to Owner Menu" << endl;
+        cout << "Enter your choice (0-5): ";
+        cin >> ownerChoice;
+
+        switch (ownerChoice) {
+        case 0:
+            return; // Return to landlord menu
+        case 1:
+            addOwner(OwnerList);
+            break;
+        case 2:
+            updateOwner(OwnerList);
+            break;
+        case 3:
+            removeOwner(OwnerList);
+            break;
+        case 4:
+            displayOwners(OwnerList);
+            break;
+        case 5:
+            addPropertyToOwner(OwnerList, propertyManager);
+            break;
+        default:
+            cout << "Invalid choice. Please enter a number between 0-5." << endl;
+            promptContinue();
+        }
+    } while (ownerChoice != 0);
+}
+
+void manageTenantDetails(TenantManager& manager)
+{
+    int tenantChoice;
+
+    do {
+        system("cls");
+        cout << "=========================================" << endl;
+        cout << "               TENANT DETAILS            " << endl;
+        cout << "=========================================" << endl;
+        cout << "1    Add Tenant" << endl;
+        cout << "2    Update Tenant Information" << endl;
+        cout << "3    Display Tenant Information" << endl;
+        cout << "4    Remove Tenant" << endl;
+        cout << "0    Back to Owner Menu" << endl;
+        cout << "Enter your choice (0-4): ";
+        cin >> tenantChoice;
+
+        switch (tenantChoice) {
+        case 0:
+            return; // Return to landlord menu
+        case 1:
+            addTenant(manager);
+            break;
+        case 2:
+            updateTenant(manager);
+            break;
+        case 3:
+            displayTenant(manager);
+            break;
+        case 4:
+            removeTenant(manager);
+            break;
+        default:
+            cout << "Invalid choice. Please enter a number between 0-4." << endl;
+            promptContinue();
+        }
+    } while (tenantChoice != 0);
 }
 
 void tenant(TenantManager& manager, DepositManager& depositManager, Property& propertyManager)
