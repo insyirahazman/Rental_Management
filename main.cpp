@@ -417,6 +417,9 @@ void houseAvailabilityLandlord(Property& propertyManager)
                 {
                     cout << "Failed to add property. Storage might be full." << endl;
                 }
+                cout << "Press Enter to continue...";
+                cin.ignore();
+                cin.get();
                 break;
             }
 
@@ -453,6 +456,9 @@ void houseAvailabilityLandlord(Property& propertyManager)
                 {
                     cout << "Property not found!" << endl;
                 }
+                cout << "Press Enter to continue...";
+                cin.ignore();
+                cin.get();
                 break;
             }
 
@@ -475,6 +481,9 @@ void houseAvailabilityLandlord(Property& propertyManager)
                 {
                     cout << "Property not found!" << endl;
                 }
+                cout << "Press Enter to continue...";
+                cin.ignore();
+                cin.get();
                 break;
             }
 
@@ -666,8 +675,10 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
         if (landlordChoice < 0 || landlordChoice > 5)
         {
             cout << "Invalid choice. Please enter a number between 0-5." << endl;
-            cout << "Enter your choice (0-5): ";
-            cin >> landlordChoice;
+            cout << "Press Enter to try again...";
+            cin.ignore();
+            cin.get();
+            continue;
         }
 
         switch (landlordChoice)
@@ -675,8 +686,6 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
             case 1:
             {
                 int OwnerChoice;
-                char Continue;
-
                 do
                 {
                     system("cls");
@@ -688,7 +697,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                     cout << "-----------------------------------------" << endl;
                     cout << "1    Add Owner" << endl;
                     cout << "2    Update Owner" << endl;
-                    cout << "3    Remove Owner" <<endl;
+                    cout << "3    Remove Owner" << endl;
                     cout << "4    Display All Owners" << endl;
                     cout << "5    Add Property To Owner" << endl;
                     cout << "" << endl;
@@ -697,7 +706,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                     cout << "Enter an option (0-5): ";
                     cin >> OwnerChoice;
 
-                    if (OwnerChoice==0)
+                    if (OwnerChoice == 0)
                         break;
 
                     switch (OwnerChoice)
@@ -716,6 +725,10 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                             cin.getline(email, 100);
 
                             OwnerList.AddOwner(name, contact, email);
+                            cout << "Owner added successfully!" << endl;
+                            cout << "Press Enter to continue...";
+                            cin.ignore();
+                            cin.get();
                             break;
                         }
 
@@ -735,6 +748,10 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                             cin.getline(email, 100);
 
                             OwnerList.UpdateOwner(id, name, contact, email);
+                            cout << "Owner updated successfully!" << endl;
+                            cout << "Press Enter to continue...";
+                            cin.ignore();
+                            cin.get();
                             break;
                         }
 
@@ -745,6 +762,10 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                             cout << "Enter Owner ID to remove: ";
                             cin >> id;
                             OwnerList.RemoveOwner(id);
+                            cout << "Owner removed successfully!" << endl;
+                            cout << "Press Enter to continue...";
+                            cin.ignore();
+                            cin.get();
                             break;
                         }
 
@@ -793,7 +814,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                             cout << "Enter occupancy status (empty/occupied): ";
                             cin >> status;
 
-                            int id = propertyManager.AddProperty(id, address, details, deposit, rent, status);
+                            int id = propertyManager.AddProperty(ownerId, address, details, deposit, rent, status);
                             if (id != -1)
                             {
                                 cout << "Property added successfully! Property ID: " << id << endl;
@@ -809,7 +830,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                         }
 
                         default:
-                            cout << "Invalid option. Please enter a number between 0-6." << endl;
+                            cout << "Invalid option. Please enter a number between 0-5." << endl;
                             cout << "Press Enter to continue...";
                             cin.ignore();
                             cin.get();
@@ -845,6 +866,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                     if (tenantChoice < 0 || tenantChoice > 4)
                     {
                         cout << "Invalid choice. Please enter a number between 0-4." << endl;
+                        cout << "Press Enter to continue...";
                         cin.ignore();
                         cin.get();
                         continue;
@@ -895,6 +917,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
 
                             // Now add the tenant with the new ID
                             manager.AddTenant(TenantID, TenantName, TenantIC, TenantContact, TenantEmail, AccountNumber, BankName);
+                            cout << "Tenant added successfully!" << endl;
                             cout << "Press Enter to continue...";
                             cin.ignore();
                             cin.get();
@@ -911,6 +934,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                             if (!manager.DoesTenantExist(TenantID))
                             {
                                 cout << "Tenant ID not found!" << endl;
+                                cout << "Press Enter to continue...";
                                 cin.ignore();
                                 cin.get();
                                 break;
@@ -938,6 +962,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
                             cout << "Enter Tenant ID to remove: ";
                             cin >> tenantID;
                             manager.RemoveTenant(tenantID);
+                            cout << "Tenant removed successfully!" << endl;
                             cout << "Press Enter to continue...";
                             cin.ignore();
                             cin.get();
@@ -1005,7 +1030,7 @@ void landlord(TenantManager& manager, List& OwnerList, DepositManager& depositMa
 
             default:
                 cout << "Invalid option. Please enter a number between 0-5." << endl;
-                cout << "Press Enter to try again...";
+                cout << "Press Enter to continue...";
                 cin.ignore();
                 cin.get();
         }
@@ -1044,8 +1069,10 @@ void tenant(TenantManager& manager, DepositManager& depositManager, Property& pr
         if (tenantChoice < 0 || tenantChoice > 5)
         {
             cout << "Invalid choice. Please enter a number between 0-4." << endl;
-            cout << "Enter your choice (0-4): ";
-            cin >> tenantChoice;
+            cout << "Press Enter to continue...";
+            cin.ignore();
+            cin.get();
+            continue;
         }
 
     switch (tenantChoice)
@@ -1072,6 +1099,7 @@ void tenant(TenantManager& manager, DepositManager& depositManager, Property& pr
                 if (tenantChoice < 0 || tenantChoice > 2)
                 {
                     cout << "Invalid choice. Please enter a number between 0-2." << endl;
+                    cout << "Press Enter to continue...";
                     cin.ignore();
                     cin.get();
                     continue;
@@ -1089,13 +1117,14 @@ void tenant(TenantManager& manager, DepositManager& depositManager, Property& pr
                         if (!manager.DoesTenantExist(TenantID))
                         {
                             cout << "Tenant ID not found!" << endl;
+                            cout << "Press Enter to continue...";
                             cin.ignore();
                             cin.get();
                             break;
                         }
 
                         // Call the update tenant menu function
-                        (manager, TenantID);
+                        updateTenantMenu(manager, TenantID);
                         break;
 
                     // Display tenant details
@@ -1120,9 +1149,15 @@ void tenant(TenantManager& manager, DepositManager& depositManager, Property& pr
             break;
         case 4:
              cout << "Under maintenance house availability function" << endl;
+             cout << "Press Enter to continue...";
+             cin.ignore();
+             cin.get();
             break;
         default:
             cout << "Invalid option. Please enter a number between 1-4." << endl;
+            cout << "Press Enter to continue...";
+            cin.ignore();
+            cin.get();
             continue;
     }
 
@@ -1161,6 +1196,9 @@ int main(){
             break;
         default:
             cout<<"Invalid choice. Choose between 1 to 3"<<endl;
+            cout << "Press Enter to continue...";
+            cin.ignore();
+            cin.get();
             break;
         }
         if (choice != 3)
