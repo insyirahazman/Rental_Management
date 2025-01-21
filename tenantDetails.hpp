@@ -15,12 +15,10 @@ namespace tenantDetails {
         string TenantIC, TenantName, TenantContact, TenantEmail, AccountNumber, BankName;
         string TenancyPeriod, TenancyEndDate, DepositStatus;
         float RentalAmount, PaymentDue;
-        string PaymentHistory[100]; // Fixed-size array for Payment History
-        Tenant* next; // Pointer to the next Tenant in case of collision
 
         // Default constructor
         Tenant() : TenantID(0), TenantIC(""), TenantName(""), TenantContact(""), TenantEmail(""),
-                   AccountNumber(""), BankName(""), RentalAmount(0), PaymentDue(0), DepositStatus("Not Paid"), next(nullptr) {}
+                   AccountNumber(""), BankName(""), RentalAmount(0), PaymentDue(0), DepositStatus("Not Paid") {}
 
         // Parameterized constructor
         Tenant(int id, const string& name, const string& ic, const string& contact, const string& email,
@@ -28,7 +26,7 @@ namespace tenantDetails {
                const string& endDate, float paymentDue, const string& depositStatus)
             : TenantID(id), TenantIC(ic), TenantName(name), TenantContact(contact), TenantEmail(email),
               AccountNumber(accNum), BankName(bankName), RentalAmount(rentAmount), PaymentDue(paymentDue),
-              TenancyPeriod(period), TenancyEndDate(endDate), DepositStatus(depositStatus), next(nullptr) {}
+              TenancyPeriod(period), TenancyEndDate(endDate), DepositStatus(depositStatus) {}
     };
 
     class TenantManager {
@@ -38,16 +36,18 @@ namespace tenantDetails {
         void AddTenant(int TenantID, const string& TenantName, const string& TenantIC, const string& TenantContact,
                        const string& TenantEmail, const string& AccountNumber, const string& BankName);
         void UpdateTenant(int TenantID, const string& field, const string& newUpdate);
-        string GetTenantDetails(int TenantID); // Return details as a string
+        string GetTenantDetails(int TenantID);
         void RemoveTenant(int TenantID);
         bool DoesTenantExist(int TenantID) const;
+        bool IsOccupied(int index) const;
         bool isEmpty() const;
+        int hashFunction(int TenantID) const;
 
     private:
-        Tenant* tenants[TABLE_SIZE]; // Array to store tenant pointers
-        int hashFunction(int TenantID) const; // Hash function
+        Tenant tenants[TABLE_SIZE]; // Array to store tenants
+        bool occupied[TABLE_SIZE]; // Array to track occupied slots
     };
 
 }
 
-#endif // TENANTDETAILS_HPP
+#endif

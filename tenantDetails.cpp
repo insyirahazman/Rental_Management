@@ -2,138 +2,131 @@
 #include "tenantDetails.hpp"
 
 using namespace std;
+using namespace tenantDetails;
 
-namespace tenantDetails {
+// Constructor
+TenantManager::TenantManager() {
+    for (int i = 0; i < TABLE_SIZE; ++i) {
+        occupied[i] = false; // Initialize all slots as unoccupied
+    }
+}
 
-    // Constructor for the TenantManager class
-    TenantManager::TenantManager() {
-        for (int i = 0; i < TABLE_SIZE; ++i) {
-            tenants[i] = nullptr;
-        }
+// Hash function
+int TenantManager::hashFunction(int TenantID) const {
+    return TenantID % TABLE_SIZE;
+}
+
+// Check if a specific index is occupied
+bool TenantManager::IsOccupied(int index) const {
+    return occupied[index];
+}
+
+// Add new tenant
+void TenantManager::AddTenant(int TenantID, const string& TenantName, const string& TenantIC, const string& TenantContact,
+                              const string& TenantEmail, const string& AccountNumber, const string& BankName) {
+    int index = hashFunction(TenantID);
+
+    // Use linear probing to find the next available slot
+    while (occupied[index]) {
+        index = (index + 1) % TABLE_SIZE; // Wrap around if necessary
     }
 
-    // Hash function to calculate hash value
-    int TenantManager::hashFunction(int TenantID) const {
-        return TenantID % TABLE_SIZE;
-    }
+    // Add the new tenant
+    tenants[index] = Tenant(TenantID, TenantName, TenantIC, TenantContact, TenantEmail,
+                            AccountNumber, BankName, 0.0f, "", "", 0.0f, "Not Paid");
+    occupied[index] = true; // Mark this slot as occupied
 
-    // Add a new tenant
-    void TenantManager::AddTenant(int TenantID, const string& TenantName, const string& TenantIC, const string& TenantContact,
-                                  const string& TenantEmail, const string& AccountNumber, const string& BankName) {
-        int index = hashFunction(TenantID);
+    cout << "Tenant added successfully! Details will be stored at index: " << index << endl; // Indicate where the tenant was added
+}
 
-        Tenant* newTenant = new Tenant(TenantID, TenantName, TenantIC, TenantContact, TenantEmail,
-                                       AccountNumber, BankName, 0.0f, "", "", 0.0f, "Not Paid");
+// Update a specific field of an existing tenant
+void TenantManager::UpdateTenant(int TenantID, const string& field, const string& newUpdate) {
+    int index = hashFunction(TenantID);
 
-        if (tenants[index] == nullptr) {
-            tenants[index] = newTenant;
-        } else {
-            Tenant* current = tenants[index];
-            while (current->next != nullptr) {
-                current = current->next;
-            }
-            current->next = newTenant;
-        }
-
-        cout << "Tenant added successfully!" << endl;
-    }
-
-    // Update a specific field of an existing tenant
-    void TenantManager::UpdateTenant(int TenantID, const string& field, const string& newUpdate) {
-        int index = hashFunction(TenantID);
-
-        Tenant* current = tenants[index];
-        while (current != nullptr) {
-            if (current->TenantID == TenantID) {
-                if (field == "Name") current->TenantName = newUpdate;
-                else if (field == "Contact") current->TenantContact = newUpdate;
-                else if (field == "Email") current->TenantEmail = newUpdate;
-                else if (field == "AccountNumber") current->AccountNumber = newUpdate;
-                else if (field == "BankName") current->BankName = newUpdate;
-                else {
-                    cout << "Invalid field name!" << endl;
-                    return;
-                }
-                cout << "Tenant information updated successfully!" << endl;
+    // Use linear probing to find the tenant
+    while (occupied[index]) {
+        if (tenants[index].TenantID == TenantID) {
+            if (field == "Name") tenants[index].TenantName = newUpdate;
+            else if (field == "IC") tenants[index].TenantIC = newUpdate;
+            else if (field == "Contact") tenants[index].TenantContact = newUpdate;
+            else if (field == "Email") tenants[index].TenantEmail = newUpdate;
+            else if (field == "AccountNumber") tenants[index].AccountNumber = newUpdate;
+            else if (field == "BankName") tenants[index].BankName = newUpdate;
+            else {
+                cout << "Invalid field name!" << endl;
                 return;
             }
-            current = current->next;
+            cout << "Tenant information updated successfully!" << endl;
+            return;
         }
-        cout << "Error: Tenant ID not found!" << endl;
+        index = (index + 1) % TABLE_SIZE; // Continue probing
     }
+    cout << "Error: Tenant ID not found!" << endl;
+}
 
-    // Get details of a tenant and return it as a string
-    string TenantManager::GetTenantDetails(int TenantID) {
-        int index = hashFunction(TenantID);
+// Get details of a tenant
+string TenantManager::GetTenantDetails(int TenantID) {
+    int index = hashFunction(TenantID);
 
-        Tenant* current = tenants[index];
-        while (current != nullptr) {
-            if (current->TenantID == TenantID) {
-                string tenantInfo;
-                tenantInfo += "Tenant ID: " + to_string(current->TenantID) + "\n";
-                tenantInfo += "Name: " + current->TenantName + "\n";
-                tenantInfo += "IC: " + current->TenantIC + "\n";
-                tenantInfo += "Contact: " + current->TenantContact + "\n";
-                tenantInfo += "Email: " + current->TenantEmail + "\n";
-                tenantInfo += "Account Number: " + current->AccountNumber + "\n";
-                tenantInfo += "Bank Name: " + current->BankName + "\n";
-                tenantInfo += "Rental Amount: " + to_string(current->RentalAmount) + "\n";
-                tenantInfo += "Tenancy Period: " + current->TenancyPeriod + "\n";
-                tenantInfo += "Tenancy End Date: " + current->TenancyEndDate + "\n";
-                tenantInfo += "Deposit Status: " + current->DepositStatus + "\n";
+    // Use linear probing to find the tenant
+    while (occupied[index]) {
+        if (tenants[index].TenantID == TenantID) {
+            string tenantInfo;
+            tenantInfo += "Tenant ID: " + to_string(tenants[index].TenantID) + "\n";
+            tenantInfo += "Name: " + tenants[index].TenantName + "\n";
+            tenantInfo += "IC: " + tenants[index].TenantIC + "\n";
+            tenantInfo += "Contact: " + tenants[index].TenantContact + "\n";
+            tenantInfo += "Email: " + tenants[index].TenantEmail + "\n";
+            tenantInfo += "Account Number: " + tenants[index].AccountNumber + "\n";
+            tenantInfo += "Bank Name: " + tenants[index].BankName + "\n";
+            tenantInfo += "Rental Amount: " + to_string(tenants[index].RentalAmount) + "\n";
+            tenantInfo += "Tenancy Period: " + tenants[index].TenancyPeriod + "\n";
+            tenantInfo += "Tenancy End Date: " + tenants[index].TenancyEndDate + "\n";
+            tenantInfo += "Deposit Status: " + tenants[index].DepositStatus + "\n";
 
-                return tenantInfo;  // Return the formatted details string
-            }
-            current = current->next;
+            return tenantInfo;  // Return the formatted details string
         }
-        return "Error: Tenant ID not found!";  // Return an error message if the tenant ID is not found
+        index = (index + 1) % TABLE_SIZE; // Continue probing
     }
+    return "Error: Tenant ID not found!";  // Return an error message if the tenant ID is not found
+}
 
-    // Remove a tenant
-    void TenantManager::RemoveTenant(int TenantID) {
-        int index = hashFunction(TenantID);
+// Remove a tenant
+void TenantManager::RemoveTenant(int TenantID) {
+    int index = hashFunction(TenantID);
 
-        Tenant* current = tenants[index];
-        Tenant* prev = nullptr;
-        while (current != nullptr) {
-            if (current->TenantID == TenantID) {
-                if (prev == nullptr) {
-                    tenants[index] = current->next;
-                } else {
-                    prev->next = current->next;
-                }
-                delete current;
-                cout << "Tenant removed successfully!" << endl;
-                return;
-            }
-            prev = current;
-            current = current->next;
+    // Use linear probing to find the tenant
+    while (occupied[index]) {
+        if (tenants[index].TenantID == TenantID) {
+            occupied[index] = false; // Mark this slot as unoccupied
+            cout << "Tenant removed successfully!" << endl;
+            return;
         }
-        cout << "Error: Tenant ID not found!" << endl;
+        index = (index + 1) % TABLE_SIZE; // Continue probing
     }
+    cout << "Error: Tenant ID not found!" << endl;
+}
 
-    // Check if a tenant exists
-    bool TenantManager::DoesTenantExist(int TenantID) const {
-        int index = hashFunction(TenantID);
+// Check if a tenant exists
+bool TenantManager::DoesTenantExist(int TenantID) const {
+    int index = hashFunction(TenantID);
 
-        Tenant* current = tenants[index];
-        while (current != nullptr) {
-            if (current->TenantID == TenantID) {
-                return true;
-            }
-            current = current->next;
+    // Use linear probing to find the tenant
+    while (occupied[index]) {
+        if (tenants[index].TenantID == TenantID) {
+            return true;
         }
-        return false;
+        index = (index + 1) % TABLE_SIZE; // Continue probing
     }
+    return false;
+}
 
-    // Check if the tenant manager is empty
-    bool TenantManager::isEmpty() const {
-        for (int i = 0; i < TABLE_SIZE; i++) {
-            if (tenants[i] != nullptr) {
-                return false;
-            }
+// Check if the tenant manager is empty
+bool TenantManager::isEmpty() const {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        if (occupied[i]) {
+            return false;
         }
-        return true;
     }
-
+    return true;
 }
