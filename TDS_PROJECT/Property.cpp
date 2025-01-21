@@ -66,7 +66,7 @@ int Property::AddProperty(List& OwnerList, int OwnerID, int PropertyID, const st
     }
 
     // Associate the property with the owner
-    List::PublicOwnerPtr Owner = OwnerList.FindOwnerByID(OwnerID);
+    List::OwnerPtr Owner = OwnerList.FindOwnerByID(OwnerID); // Changed to OwnerPtr
     if (!Owner)
     {
         cout << "Owner ID not found. Please add the owner first." << endl;
@@ -89,8 +89,8 @@ int Property::AddProperty(List& OwnerList, int OwnerID, int PropertyID, const st
     nextPropertyID++;
 
     // Create a new PropertyPtr
-    PropertyPtr newProperty = new PropertyDetails(hashTable[storeIndex]);
-    newProperty->next = Owner->propertyHead.ptr;  // Assign using the raw pointer inside PropertyPtr
+    PropertyDetails* newProperty = new PropertyDetails(hashTable[storeIndex]);
+    newProperty->next = Owner->propertyHead;  // Assign using the raw pointer inside PropertyPtr
     Owner->propertyHead = newProperty;           // Assign the PropertyPtr
 
     cout << "Property added successfully! Property ID: " << PropertyID << endl;

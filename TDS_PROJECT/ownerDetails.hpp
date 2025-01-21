@@ -9,43 +9,43 @@ using namespace std;
 
 class Property;
 
-class List{
+class List {
 private:
-    struct PropertyDetails{
+    struct PropertyDetails {
         PropertyDetails* next;
     };
 
-    struct PropertyPtr{
+    struct PropertyPtr {
         PropertyPtr* propertyHead;
         PropertyPtr() : propertyHead(nullptr) {}
-        PropertyPtr(PropertyPtr* p) : propertyHead(p){}
+        PropertyPtr(PropertyPtr* p) : propertyHead(p) {}
         PropertyPtr(std::nullptr_t) : propertyHead(nullptr) {} // Constructor for nullptr
 
-        bool operator!=(std::nullptr_t) const
-        {
+        bool operator!=(std::nullptr_t) const {
             return propertyHead != nullptr;
         }
     };
 
-    struct Owner{
+    struct Owner {
         int OwnerID;
         char* OwnerName;
         char* OwnerContact;
         char* OwnerEmail;
-        Owner* next;
         PropertyDetails* propertyHead;
+        Owner* next;
 
-        Owner() : OwnerID(0), OwnerName(nullptr), OwnerContact(nullptr), OwnerEmail(nullptr), propertyHead(nullptr), next(nullptr) {}
+        Owner() : OwnerID(0), OwnerName(nullptr), OwnerContact(nullptr), OwnerEmail(nullptr), next(nullptr), propertyHead(nullptr) {}
     };
 
+public:
     typedef struct Owner* OwnerPtr;
-    typedef struct PropertyDetails* PropertyPtr;
+    typedef struct PropertyDetails* PropertyDetailsPtr; // Renamed to avoid conflict
     OwnerPtr head;
     OwnerPtr curr;
     OwnerPtr temp;
     int prevID;
 
-    void formattedID(int id) const{
+    void formattedID(int id) const {
         cout << setw(5) << setfill('0') << id;
     }
 
@@ -70,7 +70,6 @@ private:
         return nextID;
     }
 
-public: // functions
     List();
     ~List();
 

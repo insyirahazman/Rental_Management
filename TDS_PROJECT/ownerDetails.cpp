@@ -17,11 +17,11 @@ List::~List() {
         temp = curr;
         curr = curr->next;
 
-        PropertyPtr prop = temp->propertyHead;
+        PropertyDetails* prop = temp->propertyHead;
         while (prop != nullptr) {
-            PropertyPtr tempProp = prop;
-            prop = prop->next;  // Access raw pointer and navigate to `next`
-            delete tempProp;     // Delete the raw pointer
+            PropertyDetails* tempProp = prop;
+            prop = prop->next;
+            delete tempProp;
         }
 
         delete[] temp->OwnerName;
@@ -102,14 +102,15 @@ void List::GetOwnerDetails() {
         cout << "Contact    : " << curr->OwnerContact << endl;
         cout << "Email      : " << curr->OwnerEmail << endl;
 
-        PropertyPtr prop = curr->propertyHead;
+        PropertyDetails* prop = curr->propertyHead;
         if (prop == nullptr) {
             cout << "Properties : None" << endl;
         } else {
             cout << "Properties :" << endl;
             while (prop != nullptr) {
+                // Ensure PropertyDetails has PropertyID member or correct structure is used
                 cout << "   - Property ID: " << prop->PropertyID << endl;
-                prop = prop->ptr->next;
+                prop = prop->next;
             }
         }
         cout << "\n----------------------------------------" << endl;
@@ -181,10 +182,10 @@ bool List::IsOwnerExist(int OwnerID) {
     return false;
 }
 
-PublicOwnerPtr List::FindOwnerByID(int OwnerID) {
+List::OwnerPtr List::FindOwnerByID(int OwnerID) {
     OwnerPtr current = head;
     while (current != nullptr) {
-        if (curr->OwnerID == OwnerID) {
+        if (current->OwnerID == OwnerID) {
             return current;
         }
         current = current->next;
