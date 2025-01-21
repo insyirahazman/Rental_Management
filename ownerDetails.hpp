@@ -1,31 +1,35 @@
 #ifndef ownerDetails_h
 #define ownerDetails_h
+
+#include <iostream>
 #include <iomanip>
+#include "Property.hpp"
+
 using namespace std;
 
-class List{
+class Property;
+
+class List {
 private:
-
-    typedef struct Property{
-        int PropertyID;
-        Property* next;
-    }* PropertyPtr;
-
-    typedef struct Owner{
+    struct Owner {
         int OwnerID;
         char* OwnerName;
         char* OwnerContact;
         char* OwnerEmail;
-        PropertyPtr propertyHead;
+        Property::PropertyDetails* propertyHead;  // Use Property::PropertyDetails here
         Owner* next;
-    }* OwnerPtr;
 
+        Owner() : OwnerID(0), OwnerName(nullptr), OwnerContact(nullptr), OwnerEmail(nullptr), next(nullptr), propertyHead(nullptr) {}
+    };
+
+public:
+    typedef struct Owner* OwnerPtr;
     OwnerPtr head;
     OwnerPtr curr;
     OwnerPtr temp;
     int prevID;
 
-    void formattedID(int id) const{
+    void formattedID(int id) const {
         cout << setw(5) << setfill('0') << id;
     }
 
@@ -50,17 +54,19 @@ private:
         return nextID;
     }
 
-public: // functions
     List();
     ~List();
 
+    typedef Owner* ownerPtr;
+
     void AddOwner(const char* OwnerName, const char* OwnerContact, const char* OwnerEmail);
-    void AddPropertyToOwner(int OwnerID, int PropertyID);
     void UpdateOwner(int OwnerID, const char* OwnerName, const char* OwnerContact, const char* OwnerEmail);
     void GetOwnerDetails();
     void GetOwnerByID(int OwnerID);
     void RemoveOwner(int OwnerID);
     bool IsOwnerExist(int OwnerID);
+    void UpdatePropertyCount(int OwnerID, int countChange);
+    OwnerPtr FindOwnerByID(int OwnerID);
 };
 
 #endif // header_h

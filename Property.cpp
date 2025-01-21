@@ -1,6 +1,8 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include "Property.hpp"
+#include "ownerDetails.hpp"
 using namespace std;
 
 Property::Property():nextPropertyID(1), currentSize(0)
@@ -55,10 +57,19 @@ Property::PropertyDetails Property::createPropertyDetails(int PropertyID, const 
     return newProperty;
 }
 
-int Property::AddProperty(int PropertyID, const string& PropertyAddress, const string& UnitDetails, float RentDeposit, float RentAmt, const string& OccupancyStatus)
+int Property::AddProperty(List& OwnerList, int OwnerID, int PropertyID, const string& PropertyAddress, const string& UnitDetails, float RentDeposit, float RentAmt, const string& OccupancyStatus)
 {
-    if(currentSize >= HASH_SIZE)
+    if (currentSize >= HASH_SIZE)
     {
+        cout << "Hash table is full." << endl;
+        return -1;
+    }
+
+    // Associate the property with the owner
+    List::OwnerPtr Owner = OwnerList.FindOwnerByID(OwnerID); // Changed to OwnerPtr
+    if (!Owner)
+    {
+        cout << "Owner ID not found. Please add the owner first." << endl;
         return -1;
     }
 
@@ -68,15 +79,21 @@ int Property::AddProperty(int PropertyID, const string& PropertyAddress, const s
 
     hash(hashTable, HASH_SIZE, PropertyID, storeIndex, found, -1);
 
-    if(!found)
+    if (!found)
     {
         return -1;
     }
 
     hashTable[storeIndex] = createPropertyDetails(PropertyID, PropertyAddress, UnitDetails, RentDeposit, RentAmt, OccupancyStatus);
-
     currentSize++;
     nextPropertyID++;
+
+    // Create a new PropertyPtr
+    PropertyDetails* newProperty = new PropertyDetails(hashTable[storeIndex]);
+    newProperty->next = Owner->propertyHead;  // Assign using the raw pointer inside PropertyPtr
+    Owner->propertyHead = newProperty;           // Assign the PropertyPtr
+
+    cout << "Property added successfully! Property ID: " << PropertyID << endl;
     return PropertyID;
 }
 
@@ -135,14 +152,36 @@ const string Property::CheckVacancy(int PropertyID)
 void Property::VacantUnits(int* vacantUnits, int& count)
 {
     count = 0;
+    bool foundVacant = false;
 
     for(int i=0; i<HASH_SIZE; i++)
     {
-        if(hashTable[i].isOccupied && hashTable[i].OccupancyStatus == "empty")
+        if(hashTable[i].isOccupied && toLowerCase(hashTable[i].OccupancyStatus) == "empty")
         {
+            foundVacant = true;
             vacantUnits[count++] = hashTable[i].PropertyID;
+
+            // Display detailed information for each vacant property
+            cout << "\nProperty ID: " << hashTable[i].PropertyID << endl;
+            cout << "Address: " << hashTable[i].PropertyAddress << endl;
+            cout << "Unit Details: " << hashTable[i].UnitDetails << endl;
+            cout << "Rent Deposit: RM" << fixed << setprecision(2) << hashTable[i].RentDeposit << endl;
+            cout << "Monthly Rent: RM" << fixed << setprecision(2) << hashTable[i].RentAmt << endl;
+            cout << "Status: " << hashTable[i].OccupancyStatus << endl;
         }
     }
+    if(!foundVacant)
+    {
+        cout << "No vacant properties found." << endl;
+    }
+}
+
+const string toLowerCase(const string& input)
+{
+    string lower = input;
+    for (char& c : lower)
+        c = tolower(c);
+    return lower;
 }
 
 bool Property::RemoveProperty(int PropertyID)

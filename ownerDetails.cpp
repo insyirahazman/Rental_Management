@@ -1,24 +1,25 @@
 #include <cstring>
 #include <iostream>
 #include "ownerDetails.hpp"
+#include "Property.hpp"
 using namespace std;
 
-List::List(){
+List::List() {
     prevID = 0;
-    head = NULL;
-    curr = NULL;
-    temp = NULL;
+    head = nullptr;
+    curr = nullptr;
+    temp = nullptr;
 }
 
-List::~List(){
+List::~List() {
     curr = head;
-    while (curr != NULL){
+    while (curr != nullptr) {
         temp = curr;
         curr = curr->next;
 
-        PropertyPtr prop = temp->propertyHead;
-        while (prop != NULL) {
-            PropertyPtr tempProp = prop;
+        PropertyDetails* prop = temp->propertyHead;
+        while (prop != nullptr) {
+            PropertyDetails* tempProp = prop;
             prop = prop->next;
             delete tempProp;
         }
@@ -30,28 +31,27 @@ List::~List(){
     }
 }
 
-void List::AddOwner(const char* OwnerName, const char* OwnerContact, const char* OwnerEmail){
-
+void List::AddOwner(const char* OwnerName, const char* OwnerContact, const char* OwnerEmail) {
     OwnerPtr newOwner = new Owner;
     newOwner->OwnerID = getNextID();
 
-    newOwner->OwnerName = new char[strlen(OwnerName)+1];
+    newOwner->OwnerName = new char[strlen(OwnerName) + 1];
     strcpy(newOwner->OwnerName, OwnerName);
 
-    newOwner->OwnerContact = new char[strlen(OwnerContact)+1];
+    newOwner->OwnerContact = new char[strlen(OwnerContact) + 1];
     strcpy(newOwner->OwnerContact, OwnerContact);
 
-    newOwner->OwnerEmail = new char[strlen(OwnerEmail)+1];
+    newOwner->OwnerEmail = new char[strlen(OwnerEmail) + 1];
     strcpy(newOwner->OwnerEmail, OwnerEmail);
 
-    newOwner->propertyHead = NULL;
-    newOwner->next = NULL;
+    newOwner->propertyHead = nullptr;
+    newOwner->next = nullptr;
 
-    if(head == NULL){
+    if (head == nullptr) {
         head = newOwner;
-    } else{
+    } else {
         curr = head;
-        while(curr->next != NULL){
+        while (curr->next != nullptr) {
             curr = curr->next;
         }
         curr->next = newOwner;
@@ -63,49 +63,21 @@ void List::AddOwner(const char* OwnerName, const char* OwnerContact, const char*
     cout << endl;
 }
 
-void List::AddPropertyToOwner(int OwnerID, int PropertyID){
+void List::UpdateOwner(int OwnerID, const char* OwnerName, const char* OwnerContact, const char* OwnerEmail) {
     curr = head;
-    while (curr != NULL) {
+    while (curr != nullptr) {
         if (curr->OwnerID == OwnerID) {
-            PropertyPtr newProperty = new Property;
-            newProperty->PropertyID = PropertyID;
-            newProperty->next = NULL;
-
-            if (curr->propertyHead == NULL) {
-                curr->propertyHead = newProperty;
-            } else {
-                PropertyPtr prop = curr->propertyHead;
-                while (prop->next != NULL) {
-                    prop = prop->next;
-                }
-                prop->next = newProperty;
-            }
-            cout << "Property added to Owner ID: ";
-            formattedID(OwnerID);
-            cout << endl;
-            return;
-        }
-        curr = curr->next;
-    }
-    cout << "Owner ID: " << OwnerID << " not found." << endl;
-}
-
-
-void List::UpdateOwner(int OwnerID, const char* OwnerName, const char* OwnerContact, const char* OwnerEmail){
-    curr = head;
-    while (curr != NULL){
-        if (curr->OwnerID == OwnerID){
             delete[] curr->OwnerName;
             delete[] curr->OwnerContact;
             delete[] curr->OwnerEmail;
 
-            curr->OwnerName = new char[strlen(OwnerName)+1];
+            curr->OwnerName = new char[strlen(OwnerName) + 1];
             strcpy(curr->OwnerName, OwnerName);
 
-            curr->OwnerContact = new char[strlen(OwnerContact)+1];
+            curr->OwnerContact = new char[strlen(OwnerContact) + 1];
             strcpy(curr->OwnerContact, OwnerContact);
 
-            curr->OwnerEmail = new char[strlen(OwnerEmail)+1];
+            curr->OwnerEmail = new char[strlen(OwnerEmail) + 1];
             strcpy(curr->OwnerEmail, OwnerEmail);
 
             cout << "Owner details updated successfully." << endl;
@@ -116,13 +88,13 @@ void List::UpdateOwner(int OwnerID, const char* OwnerName, const char* OwnerCont
     cout << "Owner ID: " << OwnerID << " not found." << endl;
 }
 
-void List::GetOwnerDetails(){
-    if(head == NULL){
+void List::GetOwnerDetails() {
+    if (head == nullptr) {
         cout << "No owners found in the system. " << endl;
         return;
     }
     curr = head;
-    while (curr != NULL){
+    while (curr != nullptr) {
         cout << "Owner ID: ";
         formattedID(curr->OwnerID);
         cout << endl;
@@ -130,12 +102,13 @@ void List::GetOwnerDetails(){
         cout << "Contact    : " << curr->OwnerContact << endl;
         cout << "Email      : " << curr->OwnerEmail << endl;
 
-       PropertyPtr prop = curr->propertyHead;
-        if (prop == NULL) {
+        PropertyDetails* prop = curr->propertyHead;
+        if (prop == nullptr) {
             cout << "Properties : None" << endl;
         } else {
             cout << "Properties :" << endl;
-            while (prop != NULL) {
+            while (prop != nullptr) {
+                // Ensure PropertyDetails has PropertyID member or correct structure is used
                 cout << "   - Property ID: " << prop->PropertyID << endl;
                 prop = prop->next;
             }
@@ -145,10 +118,10 @@ void List::GetOwnerDetails(){
     }
 }
 
-void List::GetOwnerByID(int OwnerID){
+void List::GetOwnerByID(int OwnerID) {
     curr = head;
-    while(curr != NULL){
-        if(curr->OwnerID == OwnerID){
+    while (curr != nullptr) {
+        if (curr->OwnerID == OwnerID) {
             cout << "Owner ID: " << curr->OwnerID << endl;
             cout << "Name    : " << curr->OwnerName << endl;
             cout << "Contact : " << curr->OwnerContact << endl;
@@ -160,8 +133,8 @@ void List::GetOwnerByID(int OwnerID){
     cout << "Owner ID: " << OwnerID << " not found." << endl;
 }
 
-void List::RemoveOwner(int OwnerID){
-    if(head == NULL){
+void List::RemoveOwner(int OwnerID) {
+    if (head == nullptr) {
         cout << "There are no owners in the system." << endl;
         return;
     }
@@ -169,19 +142,19 @@ void List::RemoveOwner(int OwnerID){
     temp = head;
     curr = head;
 
-    while(curr != NULL && curr->OwnerID != OwnerID){
+    while (curr != nullptr && curr->OwnerID != OwnerID) {
         temp = curr;
         curr = curr->next;
     }
 
-    if(curr == NULL){
+    if (curr == nullptr) {
         cout << "Owner ID: " << OwnerID << " not found." << endl;
         return;
     }
 
-    if(curr == head){
+    if (curr == head) {
         head = head->next;
-    } else{
+    } else {
         temp->next = curr->next;
     }
 
@@ -197,13 +170,25 @@ void List::RemoveOwner(int OwnerID){
     cout << "Owner removed successfully." << endl;
 }
 
-bool List::IsOwnerExist(int OwnerID){
+bool List::IsOwnerExist(int OwnerID) {
     curr = head;
-    while (curr != NULL){
-        if (curr->OwnerID == OwnerID){
+    while (curr != nullptr) {
+        if (curr->OwnerID == OwnerID) {
             return true;
+
         }
         curr = curr->next;
     }
     return false;
+}
+
+List::OwnerPtr List::FindOwnerByID(int OwnerID) {
+    OwnerPtr current = head;
+    while (current != nullptr) {
+        if (current->OwnerID == OwnerID) {
+            return current;
+        }
+        current = current->next;
+    }
+    return nullptr;
 }

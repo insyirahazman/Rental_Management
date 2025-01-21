@@ -53,6 +53,9 @@ void DepositManager::UpdateDeposit(int tenantID) {
 }
 
 void DepositManager::ViewTenantDeposit(int tenantID) {
+    cout << "Enter Tenant ID to view deposit record: ";
+    cin >> tenantID;
+
     bool found = false;
     for (int i = 0; i < depositSize; ++i) {
         if (deposits[i].TenantID == tenantID) {
